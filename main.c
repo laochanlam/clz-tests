@@ -6,14 +6,11 @@
 #include <assert.h>
 #include <omp.h>
 
-#if defined(recursive)
-#define clz(x) clz2(x,0)
-#endif
 
-#if defined(overload)
-#include "clz.hpp"
-#else
 #include "clz.h"
+
+#if defined(recursive)
+#define clz(x) clz2(x,  0)
 #endif
 
 static inline __attribute__((always_inline))
@@ -110,6 +107,7 @@ int main(int argc, char *argv[])
             get_cycles(&timec_high1, &timec_low1);
             clz(i);
             get_cycles_end(&timec_high2, &timec_low2);
+            assert( __builtin_clz (i) == clz(i));
             timec = diff_in_cycles(timec_high1, timec_low1, timec_high2, timec_low2);
             timecall += timec;
         }
